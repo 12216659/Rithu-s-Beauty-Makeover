@@ -21,8 +21,8 @@ const Home = () => {
     const fetchData = async () => {
       try {
         const [reviewsRes, servicesRes] = await Promise.all([
-          axios.get('http://localhost:5000/api/reviews'),
-          axios.get('http://localhost:5000/api/services')
+          axios.get('https://rithus-backend.onrender.com/api/reviews'),
+          axios.get('https://rithus-backend.onrender.com/api/services')
         ]);
         setReviews(reviewsRes.data);
         setServices(servicesRes.data);

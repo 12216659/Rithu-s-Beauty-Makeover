@@ -12,7 +12,7 @@ const Gallery = () => {
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const { data } = await axios.get('http://localhost:5000/api/gallery');
+        const { data } = await axios.get('https://rithus-backend.onrender.com/api/gallery');
         setImages(data);
       } catch (err) {
         console.error('Error fetching gallery:', err);

@@ -11,7 +11,7 @@ const ManageReviews = () => {
 
   const fetchReviews = async () => {
     try {
-      const { data } = await axios.get('http://localhost:5000/api/reviews');
+      const { data } = await axios.get('https://rithus-backend.onrender.com/api/reviews');
       setReviews(data);
     } catch (err) {
       console.error('Error fetching reviews:', err);
@@ -48,7 +48,7 @@ const ManageReviews = () => {
       // Fallback profile image if not uploaded
       const finalImage = formData.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.name)}&background=random`;
 
-      await axios.post('http://localhost:5000/api/reviews', {
+      await axios.post('https://rithus-backend.onrender.com/api/reviews', {
         ...formData,
         image: finalImage,
         rating: Number(formData.rating)
@@ -71,7 +71,7 @@ const ManageReviews = () => {
     if(window.confirm("Delete this review?")) {
       try {
         const token = localStorage.getItem('token');
-        await axios.delete(`http://localhost:5000/api/reviews/${id}`, {
+        await axios.delete(`https://rithus-backend.onrender.com/api/reviews/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setReviews(reviews.filter(r => r._id !== id));

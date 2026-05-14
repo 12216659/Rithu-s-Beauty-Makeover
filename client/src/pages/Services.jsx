@@ -11,7 +11,7 @@ const Services = () => {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const { data } = await axios.get('http://localhost:5000/api/services');
+        const { data } = await axios.get('https://rithus-backend.onrender.com/api/services');
         setServices(data);
       } catch (error) {
         console.error('Error fetching services:', error);
@@ -37,7 +37,7 @@ const Services = () => {
 
     try {
       // Save to database first
-      await axios.post('http://localhost:5000/api/bookings', {
+      await axios.post('https://rithus-backend.onrender.com/api/bookings', {
         name: userName,
         phone: userPhone || 'Not provided',
         service: serviceName,

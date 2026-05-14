@@ -55,7 +55,7 @@ const Signup = () => {
     try {
 
       const { data } = await axios.post(
-        'http://localhost:5000/api/auth/signup',
+        'https://rithus-backend.onrender.com/api/auth/signup',
         {
           fullName: formData.fullName,
           username: formData.username,

@@ -19,7 +19,7 @@ const ManageServices = () => {
 
   const fetchServices = async () => {
     try {
-      const { data } = await axios.get('http://localhost:5000/api/services');
+      const { data } = await axios.get('https://rithus-backend.onrender.com/api/services');
       setServices(data);
     } catch (err) {
       console.error('Error fetching services:', err);
@@ -71,10 +71,10 @@ const ManageServices = () => {
       const headers = { Authorization: `Bearer ${token}` };
 
       if (formData._id) {
-        await axios.put(`http://localhost:5000/api/services/${formData._id}`, formData, { headers });
+        await axios.put(`https://rithus-backend.onrender.com/api/services/${formData._id}`, formData, { headers });
       } else {
         const { _id, ...newServiceData } = formData;
-        await axios.post('http://localhost:5000/api/services', newServiceData, { headers });
+        await axios.post('https://rithus-backend.onrender.com/api/services', newServiceData, { headers });
       }
       
       await fetchServices();
@@ -91,7 +91,7 @@ const ManageServices = () => {
     if(window.confirm("Delete this service?")) {
       try {
         const token = localStorage.getItem('token');
-        await axios.delete(`http://localhost:5000/api/services/${id}`, {
+        await axios.delete(`https://rithus-backend.onrender.com/api/services/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setServices(services.filter(s => s._id !== id));
