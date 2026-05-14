@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-white text-gray-900 font-sans antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+    color: theme('colors.brandPink');
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white border border-gray-100 rounded-2xl shadow-lg;
+  }
+  /* For the admin panel to keep its dark glass look */
+  .dark-glass-card {
+    @apply bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl text-white;
+  }
+  .btn-primary {
+    @apply font-semibold py-3 px-8 rounded-full transition-all duration-300 hover:scale-105;
+    background-color: theme('colors.brandPink');
+    color: white;
+    box-shadow: 0 4px 15px rgba(250, 42, 116, 0.4);
+  }
+  .btn-outline {
+    @apply font-semibold py-3 px-8 rounded-full transition-all duration-300;
+    border: 2px solid theme('colors.brandPink');
+    color: theme('colors.brandPink');
+  }
+  .btn-outline:hover {
+    background-color: theme('colors.brandPink');
+    color: white;
+    box-shadow: 0 4px 15px rgba(250, 42, 116, 0.4);
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: #FA2A74;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #d81c5d;
+}
