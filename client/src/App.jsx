@@ -12,6 +12,7 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import { useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 const AnimatedBackground = () => {
   const location = useLocation();
@@ -92,6 +93,7 @@ function App() {
           </Routes>
         </main>
         <ConditionalFooter />
+        <SpeedInsights />
       </div>
     </Router>
   );
