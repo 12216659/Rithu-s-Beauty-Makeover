@@ -21,21 +21,21 @@ const DashboardHome = () => {
         // Fetch Services
         let servicesData = [];
         try {
-          const res = await axios.get('https://rithus-backend.onrender.com/api/services');
+          const res = await axios.get('https://rithusbackend.onrender.com/api/services');
           servicesData = res.data;
         } catch (e) { console.error("Services fetch failed", e); }
 
         // Fetch Gallery
         let galleryData = [];
         try {
-          const res = await axios.get('https://rithus-backend.onrender.com/api/gallery');
+          const res = await axios.get('https://rithusbackend.onrender.com/api/gallery');
           galleryData = res.data;
         } catch (e) { console.error("Gallery fetch failed", e); }
 
         // Fetch Bookings
         let bookingsData = [];
         try {
-          const res = await axios.get('https://rithus-backend.onrender.com/api/bookings', { headers });
+          const res = await axios.get('https://rithusbackend.onrender.com/api/bookings', { headers });
           bookingsData = res.data;
         } catch (e) { console.error("Bookings fetch failed", e); }
 

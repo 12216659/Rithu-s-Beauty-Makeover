@@ -12,7 +12,7 @@ const ManageGallery = () => {
 
   const fetchImages = async () => {
     try {
-      const { data } = await axios.get('https://rithus-backend.onrender.com/api/gallery');
+      const { data } = await axios.get('https://rithusbackend.onrender.com/api/gallery');
       setImages(data);
     } catch (err) {
       console.error('Error fetching gallery:', err);
@@ -54,7 +54,7 @@ const ManageGallery = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      await axios.post('https://rithus-backend.onrender.com/api/gallery', {
+      await axios.post('https://rithusbackend.onrender.com/api/gallery', {
         image: formData.image,
         category: formData.category || 'Uncategorized'
       }, {
@@ -76,7 +76,7 @@ const ManageGallery = () => {
     if (window.confirm("Delete this image from gallery?")) {
       try {
         const token = localStorage.getItem('token');
-        await axios.delete(`https://rithus-backend.onrender.com/api/gallery/${id}`, {
+        await axios.delete(`https://rithusbackend.onrender.com/api/gallery/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setImages(images.filter(i => i._id !== id));

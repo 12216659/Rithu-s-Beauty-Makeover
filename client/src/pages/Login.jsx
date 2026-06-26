@@ -29,7 +29,7 @@ const Login = () => {
     try {
 
       const { data } = await axios.post(
-        'https://rithus-backend.onrender.com/api/auth/login',
+        'https://rithusbackend.onrender.com/api/auth/login',
         credentials
       );
 

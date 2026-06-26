@@ -60,7 +60,7 @@ const Booking = () => {
     
     try {
       // Save booking to DB
-      await axios.post('https://rithus-backend.onrender.com/api/bookings', {
+      await axios.post('https://rithusbackend.onrender.com/api/bookings', {
         ...formData,
         status: 'Pending'
       }, {

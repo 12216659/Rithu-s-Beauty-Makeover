@@ -12,7 +12,7 @@ const ManageBookings = () => {
   const fetchBookings = async () => {
     try {
       const token = localStorage.getItem('token');
-      const { data } = await axios.get('https://rithus-backend.onrender.com/api/bookings', {
+      const { data } = await axios.get('https://rithusbackend.onrender.com/api/bookings', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setBookings(data);
@@ -32,7 +32,7 @@ const ManageBookings = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      await axios.post('https://rithus-backend.onrender.com/api/bookings', formData, {
+      await axios.post('https://rithusbackend.onrender.com/api/bookings', formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
@@ -51,7 +51,7 @@ const ManageBookings = () => {
     if(window.confirm("Delete this booking?")) {
       try {
         const token = localStorage.getItem('token');
-        await axios.delete(`https://rithus-backend.onrender.com/api/bookings/${id}`, {
+        await axios.delete(`https://rithusbackend.onrender.com/api/bookings/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setBookings(bookings.filter(b => b._id !== id));
@@ -65,7 +65,7 @@ const ManageBookings = () => {
   const handleStatusChange = async (id, newStatus) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`https://rithus-backend.onrender.com/api/bookings/${id}`, { status: newStatus }, {
+      await axios.put(`https://rithusbackend.onrender.com/api/bookings/${id}`, { status: newStatus }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setBookings(bookings.map(b => b._id === id ? { ...b, status: newStatus } : b));
