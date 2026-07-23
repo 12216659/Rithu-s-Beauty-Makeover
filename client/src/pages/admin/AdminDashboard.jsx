@@ -28,7 +28,7 @@ const AdminDashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-brandLightPink flex">
+    <div className="min-h-screen bg-brandSilver flex">
       {/* Mobile Sidebar Toggle */}
       <button 
         onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -38,25 +38,30 @@ const AdminDashboard = () => {
       </button>
 
       {/* Sidebar */}
-      <aside className={`fixed lg:static inset-y-0 left-0 z-40 w-64 glass-card border-l-0 border-t-0 border-b-0 rounded-none transform ${sidebarOpen ? 'translate-x-0 pt-32' : '-translate-x-full pt-6'} lg:translate-x-0 transition-transform duration-300 flex flex-col`}>
-        <div className="px-6 mb-10 hidden lg:block">
-          <h2 className="text-xl font-serif text-brandPink">Admin Panel</h2>
+      <aside className={`fixed lg:static inset-y-0 left-0 z-40 w-64 bg-white border-r border-gray-100 transform ${sidebarOpen ? 'translate-x-0 pt-32 shadow-2xl' : '-translate-x-full pt-6'} lg:translate-x-0 transition-all duration-300 flex flex-col shadow-[4px_0_24px_rgba(0,0,0,0.02)]`}>
+        <div className="px-8 mb-12 hidden lg:flex items-center gap-3">
+          <div className="w-8 h-8 bg-brandBlack rounded-lg flex items-center justify-center">
+            <span className="text-white font-serif font-bold text-lg">R</span>
+          </div>
+          <h2 className="text-xl font-serif text-brandBlack font-bold tracking-wide">Admin Panel</h2>
         </div>
         
-        <nav className="flex-1 px-4 space-y-2">
+        <nav className="flex-1 px-4 space-y-1.5">
           {navItems.map((item) => (
             <Link
               key={item.name}
               to={item.path}
               onClick={() => setSidebarOpen(false)}
-              className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
+              className={`flex items-center space-x-3 px-4 py-3.5 rounded-xl transition-all duration-300 ${
                 location.pathname === item.path 
-                  ? 'bg-brandPink text-white font-semibold shadow-md' 
-                  : 'text-gray-600 hover:bg-gray-100 hover:text-brandPink'
+                  ? 'bg-brandBlack text-white font-semibold shadow-lg shadow-brandBlack/20 translate-x-1' 
+                  : 'text-gray-500 hover:bg-gray-50 hover:text-brandBlack font-medium'
               }`}
             >
-              {item.icon}
-              <span>{item.name}</span>
+              <div className={location.pathname === item.path ? 'text-white' : 'text-gray-400'}>
+                {item.icon}
+              </div>
+              <span className="tracking-wide text-sm">{item.name}</span>
             </Link>
           ))}
         </nav>

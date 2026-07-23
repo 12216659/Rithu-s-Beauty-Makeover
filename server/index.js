@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 
 // Route imports
 const authRoutes = require('./routes/authRoutes');
@@ -16,9 +18,27 @@ connectDB();
 
 const app = express();
 
-app.use(cors());
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb', extended: true }));
+// Set security HTTP headers
+app.use(helmet());
+
+// Global Rate Limiter
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 1000, // Limit each IP to 1000 requests per window
+    message: 'Too many requests from this IP, please try again in 15 minutes'
+});
+app.use('/api', limiter);
+
+// Restrict CORS to frontend URL
+const allowedOrigin = process.env.CLIENT_URL || 'http://localhost:5173';
+app.use(cors({
+    origin: allowedOrigin,
+    optionsSuccessStatus: 200
+}));
+
+// Body parser with reduced limit (prevents DoS)
+app.use(express.json({ limit: '5mb' }));
+app.use(express.urlencoded({ limit: '5mb', extended: true }));
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -28,7 +48,7 @@ app.use('/api/bookings', bookingRoutes);
 app.use('/api/reviews', reviewRoutes);
 
 app.get('/', (req, res) => {
-    res.send('Rithu\'s Beauty Makeover API is running');
+    res.send('Rithus Beauty Hub API is running');
 });
 
 // Error handling middleware

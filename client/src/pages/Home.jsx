@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Star, CheckCircle, Loader2 } from 'lucide-react';
 import axios from 'axios';
+import Logo3D from '../components/Logo3D';
 
 const Home = () => {
   const fadeInUp = {
@@ -21,8 +22,8 @@ const Home = () => {
     const fetchData = async () => {
       try {
         const [reviewsRes, servicesRes] = await Promise.all([
-          axios.get('https://rithusbackend.onrender.com/api/reviews'),
-          axios.get('https://rithusbackend.onrender.com/api/services')
+          axios.get(`${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/reviews`),
+          axios.get(`${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/services`)
         ]);
         setReviews(reviewsRes.data);
         setServices(servicesRes.data);
@@ -39,62 +40,39 @@ const Home = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative h-[90vh] flex items-center justify-center overflow-hidden bg-brandLightPink pt-20">
-        
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0 z-0 overflow-hidden">
-          {[...Array(8)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute bg-brandPink/10 rounded-full blur-2xl"
-              animate={{
-                x: [Math.random() * 100, Math.random() * 500 - 250],
-                y: [Math.random() * 100, Math.random() * 500 - 250],
-                scale: [1, 1.2, 1],
-              }}
-              transition={{
-                duration: 15 + Math.random() * 10,
-                repeat: Infinity,
-                repeatType: "reverse",
-                ease: "easeInOut"
-              }}
-              style={{
-                width: `${150 + Math.random() * 250}px`,
-                height: `${150 + Math.random() * 250}px`,
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-              }}
-            />
-          ))}
-        </div>
-
-        <div 
-          className="absolute inset-y-0 right-0 w-full md:w-[55%] z-0 hidden md:block"
-          style={{ WebkitMaskImage: 'linear-gradient(to right, transparent, black 30%)', maskImage: 'linear-gradient(to right, transparent, black 30%)' }}
-        >
-          <img 
-            src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&q=80&w=1000" 
-            alt="Hero Background" 
-            className="w-full h-full object-cover object-center mix-blend-multiply opacity-90"
-          />
-        </div>
-        
+      <section className="relative h-[90vh] flex items-center justify-center overflow-hidden bg-transparent pt-20 border-b border-gray-100/50">
         <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <motion.div 
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
-            className="max-w-xl text-center md:text-left"
+            className="w-full flex flex-col items-center justify-center text-center -mt-16"
           >
-            <h1 className="text-5xl md:text-6xl font-sans text-brandPink mb-6 leading-tight font-bold">
-              It's your time to <br/>Shine Brighter
+            <div className="flex items-center gap-4 mb-6">
+               <div className="h-px w-12 bg-brandBlack"></div>
+               <span className="font-serif text-brandBlack text-xl tracking-widest italic">Sri Sree</span>
+               <div className="h-px w-12 bg-brandBlack"></div>
+            </div>
+            
+            <h1 className="text-6xl md:text-8xl font-serif text-brandBlack mb-4 tracking-[0.2em] leading-tight font-normal ml-4">
+              RITHUS
             </h1>
-            <p className="text-gray-600 text-lg md:text-xl mb-10 font-medium">
-              Book your Professional Bridal Makeup
+            
+            <div className="flex items-center gap-6 mb-12">
+               <div className="h-px w-16 bg-gray-300"></div>
+               <p className="text-brandBlack text-sm md:text-base tracking-[0.5em] uppercase font-semibold">
+                 BEAUTY HUB
+               </p>
+               <div className="h-px w-16 bg-gray-300"></div>
+            </div>
+            
+            <p className="text-gray-500 text-xs md:text-sm tracking-widest uppercase font-medium mb-12">
+              ELEVATE YOUR BEAUTY. EMBRACE YOUR LUXURY.
             </p>
-            <div className="flex justify-center md:justify-start">
-              <Link to="/book" className="btn-primary">
-                BOOK NOW
+            
+            <div className="flex justify-center">
+              <Link to="/book" className="btn-primary px-12 py-4 text-sm tracking-widest uppercase rounded-sm bg-brandBlack text-white hover:bg-gray-800 transition-colors shadow-xl">
+                BOOK APPOINTMENT
               </Link>
             </div>
           </motion.div>
@@ -102,7 +80,7 @@ const Home = () => {
       </section>
 
       {/* Quotation Section */}
-      <section className="py-16 bg-brandPink text-white relative overflow-hidden">
+      <section className="py-16 bg-brandBlack text-white relative overflow-hidden">
         {/* Decorative elements */}
         <div className="absolute top-0 left-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -translate-x-10 -translate-y-10"></div>
         <div className="absolute bottom-0 right-0 w-40 h-40 bg-white/10 rounded-full blur-2xl translate-x-10 translate-y-10"></div>
@@ -118,25 +96,25 @@ const Home = () => {
             <h3 className="text-white text-3xl md:text-4xl font-serif leading-relaxed font-medium mb-6 relative z-10">
               Beauty begins the moment you decide to be yourself. We are just here to add a little magic.
             </h3>
-            <p className="text-pink-100 uppercase tracking-widest text-sm font-bold">— Rithu's Makeover</p>
+            <p className="text-[#fbfaf7] uppercase tracking-widest text-sm font-bold">— Rithus Beauty Hub</p>
           </motion.div>
         </div>
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 bg-white border-b border-gray-100">
+      <section className="py-16 bg-white/40 backdrop-blur-md border-b border-gray-100/50">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-3 gap-8 text-center">
             <motion.div {...fadeInUp} className="flex flex-col items-center">
-              <h3 className="text-5xl font-bold text-brandPink mb-2">+9</h3>
+              <h3 className="text-5xl font-bold text-brandBlack mb-2">+9</h3>
               <p className="text-gray-600 font-medium text-sm tracking-wider uppercase">Years in Business</p>
             </motion.div>
             <motion.div {...fadeInUp} transition={{ delay: 0.2 }} className="flex flex-col items-center">
-              <h3 className="text-5xl font-bold text-brandPink mb-2">+5k</h3>
+              <h3 className="text-5xl font-bold text-brandBlack mb-2">+5k</h3>
               <p className="text-gray-600 font-medium text-sm tracking-wider uppercase">Happy Clients</p>
             </motion.div>
             <motion.div {...fadeInUp} transition={{ delay: 0.4 }} className="flex flex-col items-center">
-              <h3 className="text-5xl font-bold text-brandPink mb-2">+500</h3>
+              <h3 className="text-5xl font-bold text-brandBlack mb-2">+500</h3>
               <p className="text-gray-600 font-medium text-sm tracking-wider uppercase">Students Trained</p>
             </motion.div>
           </div>
@@ -144,34 +122,34 @@ const Home = () => {
       </section>
 
       {/* About Section */}
-      <section className="py-24 bg-white relative z-10">
+      <section className="py-24 bg-transparent relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <motion.div 
               {...fadeInUp}
               className="relative"
             >
-              <div className="absolute -inset-4 bg-gradient-to-r from-brandLightPink to-pink-100 rounded-2xl opacity-50 blur-lg"></div>
+              <div className="absolute -inset-4 bg-gradient-to-r from-brandSilver to-stone-100 rounded-2xl opacity-50 blur-lg"></div>
               <img 
                 src="/about-image.png" 
                 alt="Bridal Makeup Services" 
                 className="relative rounded-2xl shadow-2xl object-cover h-[500px] w-full border-4 border-white"
               />
-              <div className="absolute -bottom-6 -right-6 bg-brandPink text-white p-6 rounded-2xl shadow-xl hidden sm:block">
+              <div className="absolute -bottom-6 -right-6 bg-brandBlack text-white p-6 rounded-2xl shadow-xl hidden sm:block">
                 <p className="text-3xl font-serif font-bold">100%</p>
                 <p className="text-sm uppercase tracking-wider font-medium">Client Satisfaction</p>
               </div>
             </motion.div>
             <motion.div {...fadeInUp}>
-              <h4 className="text-brandPink tracking-widest uppercase text-sm font-bold mb-2">About Us</h4>
+              <h4 className="text-brandBlack tracking-widest uppercase text-sm font-bold mb-2">About Us</h4>
               <h2 className="text-4xl font-serif text-gray-900 mb-6">Expert Touch for Your Special Day</h2>
               <p className="text-gray-600 mb-6 leading-relaxed">
-                At Rithu's Beauty Makeover, we believe every bride deserves to look and feel absolute perfection. With years of expertise in professional bridal makeup, we use only premium international products to ensure a flawless, long-lasting finish.
+                At Rithus Beauty Hub, we believe every bride deserves to look and feel absolute perfection. With years of expertise in professional bridal makeup, we use only premium international products to ensure a flawless, long-lasting finish.
               </p>
               <ul className="space-y-4 mb-8">
                 {['Premium International Products', 'Expert Bridal Artists', 'Customized Looks', 'On-venue Services Available'].map((item, idx) => (
                   <li key={idx} className="flex items-center text-gray-700 font-medium">
-                    <CheckCircle className="text-brandPink mr-3" size={20} />
+                    <CheckCircle className="text-brandBlack mr-3" size={20} />
                     {item}
                   </li>
                 ))}
@@ -182,16 +160,16 @@ const Home = () => {
       </section>
 
       {/* Featured Services */}
-      <section className="py-24 bg-brandLightPink">
+      <section className="py-24 bg-brandSilver">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h4 className="text-brandPink tracking-widest uppercase text-sm font-bold mb-2">What We Offer</h4>
+            <h4 className="text-brandBlack tracking-widest uppercase text-sm font-bold mb-2">What We Offer</h4>
             <h2 className="text-4xl font-serif text-gray-900">Our Premium Services</h2>
           </div>
           
           {loadingServices ? (
             <div className="flex justify-center items-center py-20">
-              <Loader2 className="animate-spin text-brandPink" size={48} />
+              <Loader2 className="animate-spin text-brandBlack" size={48} />
             </div>
           ) : services.length === 0 ? (
             <div className="text-center py-20 glass-card max-w-2xl mx-auto">
@@ -219,7 +197,7 @@ const Home = () => {
                   <div className="p-8 relative">
                     <h3 className="text-2xl font-serif text-gray-900 mb-3">{service.title}</h3>
                     <p className="text-gray-600 mb-6">{service.description}</p>
-                    <Link to="/services" className="text-brandPink flex items-center hover:text-pink-600 transition-colors text-sm font-bold uppercase tracking-wider">
+                    <Link to="/services" className="text-brandBlack flex items-center hover:text-brandGray transition-colors text-sm font-bold uppercase tracking-wider">
                       View Details →
                     </Link>
                   </div>
@@ -234,16 +212,16 @@ const Home = () => {
       </section>
 
       {/* Reviews Section */}
-      <section className="py-24 bg-white">
+      <section className="py-24 bg-white/40 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h4 className="text-brandPink tracking-widest uppercase text-sm font-bold mb-2">Testimonials</h4>
+            <h4 className="text-brandBlack tracking-widest uppercase text-sm font-bold mb-2">Testimonials</h4>
             <h2 className="text-4xl font-serif text-gray-900">What Our Clients Say</h2>
           </div>
 
           {loadingReviews ? (
             <div className="flex justify-center items-center py-20">
-              <Loader2 className="animate-spin text-brandPink" size={48} />
+              <Loader2 className="animate-spin text-brandBlack" size={48} />
             </div>
           ) : reviews.length === 0 ? (
             <div className="text-center py-20 glass-card">
@@ -263,7 +241,7 @@ const Home = () => {
                   <img 
                     src={review.image} 
                     alt={review.name} 
-                    className="w-20 h-20 rounded-full object-cover border-4 border-white outline outline-brandPink shadow-xl mb-6"
+                    className="w-20 h-20 rounded-full object-cover border-4 border-white outline outline-brandBlack shadow-xl mb-6"
                   />
                   <div className="flex text-yellow-400 mb-4">
                     {[...Array(review.rating)].map((_, i) => (

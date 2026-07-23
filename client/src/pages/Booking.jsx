@@ -11,21 +11,32 @@ const Booking = () => {
     service: '',
     date: '',
     time: '',
+    address: '',
     message: ''
   });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const preselectedService = params.get('service');
+    
     const storedUser = localStorage.getItem('user');
+    let fullName = '';
+    let userPhone = '';
+    
     if (storedUser) {
       const user = JSON.parse(storedUser);
-      setFormData(prev => ({
-        ...prev,
-        name: user.fullName || '',
-        phone: user.phone || ''
-      }));
+      fullName = user.fullName || '';
+      userPhone = user.phone || '';
     }
+    
+    setFormData(prev => ({
+      ...prev,
+      name: fullName,
+      phone: userPhone,
+      service: preselectedService || prev.service
+    }));
   }, []);
 
   const servicesList = [
@@ -60,7 +71,7 @@ const Booking = () => {
     
     try {
       // Save booking to DB
-      await axios.post('https://rithusbackend.onrender.com/api/bookings', {
+      await axios.post(`${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/bookings`, {
         ...formData,
         status: 'Pending'
       }, {
@@ -69,7 +80,7 @@ const Booking = () => {
 
       // Redirect to WhatsApp after saving to DB
       const waNumber = '919515229043';
-      const message = `Hello Rithu's Beauty Makeover,%0A%0AI want to book:%0A*Service:* ${formData.service}%0A*Date:* ${formData.date}%0A*Time:* ${formData.time}%0A*Name:* ${formData.name}%0A*Message:* ${formData.message}`;
+      const message = `Hello Rithus Beauty Hub,%0A%0AI want to book:%0A*Service:* ${formData.service}%0A*Date:* ${formData.date}%0A*Time:* ${formData.time}%0A*Name:* ${formData.name}%0A*Address:* ${formData.address}%0A*Message:* ${formData.message}`;
       
       window.open(`https://wa.me/${waNumber}?text=${message}`, '_blank');
       alert('Booking request received! Redirecting to WhatsApp for confirmation.');
@@ -82,14 +93,14 @@ const Booking = () => {
   };
 
   return (
-    <div className="min-h-screen bg-brandLightPink py-24">
+    <div className="min-h-screen bg-brandSilver py-24">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12 relative z-10"
         >
-          <h1 className="text-4xl md:text-5xl font-serif text-gray-900 mb-4">Book an <span className="text-brandPink">Appointment</span></h1>
+          <h1 className="text-4xl md:text-5xl font-serif text-gray-900 mb-4">Book an <span className="text-brandBlack">Appointment</span></h1>
           <p className="text-gray-600 font-medium">Fill out the form below and we'll confirm your appointment via WhatsApp.</p>
         </motion.div>
 
@@ -109,7 +120,7 @@ const Booking = () => {
                   required
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-brandPink focus:bg-white transition-colors"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-brandBlack focus:bg-white transition-colors"
                   placeholder="Enter your name"
                 />
               </div>
@@ -121,7 +132,7 @@ const Booking = () => {
                   required
                   value={formData.phone}
                   onChange={handleChange}
-                  className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-brandPink focus:bg-white transition-colors"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-brandBlack focus:bg-white transition-colors"
                   placeholder="Enter your phone number"
                 />
               </div>
@@ -134,13 +145,26 @@ const Booking = () => {
                 required
                 value={formData.service}
                 onChange={handleChange}
-                className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-brandPink focus:bg-white transition-colors appearance-none"
+                className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-brandBlack focus:bg-white transition-colors appearance-none"
               >
                 <option value="">Choose a service...</option>
                 {servicesList.map(service => (
                   <option key={service} value={service}>{service}</option>
                 ))}
               </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-gray-700 mb-2 uppercase tracking-wider">Service Address</label>
+              <textarea
+                name="address"
+                required
+                rows="2"
+                className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-brandBlack focus:bg-white transition-colors resize-none"
+                placeholder="Enter your full address manually..."
+                onChange={handleChange}
+                value={formData.address}
+              ></textarea>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -151,7 +175,7 @@ const Booking = () => {
                   name="date" 
                   required
                   onChange={handleChange}
-                  className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-brandPink focus:bg-white transition-colors [color-scheme:light]"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-brandBlack focus:bg-white transition-colors [color-scheme:light]"
                 />
               </div>
               <div>
@@ -161,7 +185,7 @@ const Booking = () => {
                   name="time" 
                   required
                   onChange={handleChange}
-                  className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-brandPink focus:bg-white transition-colors [color-scheme:light]"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-brandBlack focus:bg-white transition-colors [color-scheme:light]"
                 />
               </div>
             </div>
@@ -172,7 +196,7 @@ const Booking = () => {
                 name="message" 
                 rows="4"
                 onChange={handleChange}
-                className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-brandPink focus:bg-white transition-colors resize-none"
+                className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-brandBlack focus:bg-white transition-colors resize-none"
                 placeholder="Any special requests or details..."
               ></textarea>
             </div>

@@ -7,8 +7,7 @@
     @apply bg-white text-gray-900 font-sans antialiased;
   }
   h1, h2, h3, h4, h5, h6 {
-    @apply font-serif;
-    color: theme('colors.brandPink');
+    @apply font-serif text-brandBlack;
   }
 }
 
@@ -22,19 +21,19 @@
   }
   .btn-primary {
     @apply font-semibold py-3 px-8 rounded-full transition-all duration-300 hover:scale-105;
-    background-color: theme('colors.brandPink');
+    background-color: theme('colors.brandBlack');
     color: white;
-    box-shadow: 0 4px 15px rgba(250, 42, 116, 0.4);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   }
   .btn-outline {
     @apply font-semibold py-3 px-8 rounded-full transition-all duration-300;
-    border: 2px solid theme('colors.brandPink');
-    color: theme('colors.brandPink');
+    border: 2px solid theme('colors.brandBlack');
+    color: theme('colors.brandBlack');
   }
   .btn-outline:hover {
-    background-color: theme('colors.brandPink');
+    background-color: theme('colors.brandBlack');
     color: white;
-    box-shadow: 0 4px 15px rgba(250, 42, 116, 0.4);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   }
 }
 
@@ -46,9 +45,9 @@
   background: #f1f1f1;
 }
 ::-webkit-scrollbar-thumb {
-  background: #FA2A74;
+  background: #1a1a1a;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #d81c5d;
+  background: #0a0a0a;
 }

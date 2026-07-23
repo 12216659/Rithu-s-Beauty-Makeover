@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { FaWhatsapp } from 'react-icons/fa';
 import { Clock, IndianRupee, Loader2 } from 'lucide-react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Services = () => {
   const [services, setServices] = useState([]);
@@ -11,7 +12,7 @@ const Services = () => {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const { data } = await axios.get('https://rithusbackend.onrender.com/api/services');
+        const { data } = await axios.get(`${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/services`);
         setServices(data);
       } catch (error) {
         console.error('Error fetching services:', error);
@@ -22,57 +23,27 @@ const Services = () => {
     fetchServices();
   }, []);
 
-  const handleWhatsAppBooking = async (serviceName) => {
-    const token = localStorage.getItem('token');
-    const storedUser = localStorage.getItem('user');
+  const navigate = useNavigate();
 
-    if (!token || !storedUser) {
-      alert('Please login first to book a service.');
-      return;
-    }
-
-    const user = JSON.parse(storedUser);
-    const userName = user.fullName || 'Client';
-    const userPhone = user.phone && user.phone !== 'N/A' ? user.phone : '';
-
-    try {
-      // Save to database first
-      await axios.post('https://rithusbackend.onrender.com/api/bookings', {
-        name: userName,
-        phone: userPhone || 'Not provided',
-        service: serviceName,
-        date: new Date().toISOString().split('T')[0], // Today's date as default
-        time: 'As soon as possible',
-        message: 'Direct booking from services page',
-        status: 'Pending'
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-
-      const message = `Hello Rithu's Beauty Makeover,%0A%0AI would like to book the following service:%0A*Service:* ${serviceName}%0A*Name:* ${userName}%0A%0APlease let me know the availability.`;
-      window.open(`https://wa.me/919515229043?text=${message}`, '_blank');
-    } catch (err) {
-      console.error('Error saving direct booking:', err);
-      const message = `Hello Rithu's Beauty Makeover,%0A%0AI would like to book the following service:%0A*Service:* ${serviceName}%0A*Name:* ${userName}%0A%0APlease let me know the availability.`;
-      window.open(`https://wa.me/919515229043?text=${message}`, '_blank');
-    }
+  const handleBookNow = (serviceName) => {
+    navigate(`/book?service=${encodeURIComponent(serviceName)}`);
   };
 
   return (
-    <div className="min-h-screen bg-white py-24">
+    <div className="min-h-screen bg-transparent py-24 relative z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-16"
         >
-          <h1 className="text-4xl md:text-5xl font-serif text-gray-900 mb-4">Our <span className="text-brandPink">Services</span></h1>
+          <h1 className="text-4xl md:text-5xl font-serif text-gray-900 mb-4">Our <span className="text-brandBlack">Services</span></h1>
           <p className="text-gray-600 max-w-2xl mx-auto font-medium">Discover our range of premium beauty services designed to make you look and feel extraordinary.</p>
         </motion.div>
 
         {loading ? (
           <div className="flex justify-center items-center h-64">
-            <Loader2 className="animate-spin text-brandPink" size={48} />
+            <Loader2 className="animate-spin text-brandBlack" size={48} />
           </div>
         ) : services.length === 0 ? (
           <div className="text-center py-20 bg-gray-50 rounded-2xl">
@@ -101,8 +72,8 @@ const Services = () => {
                 {/* Sliding Blur Container */}
                 <div className="absolute inset-x-0 bottom-0 p-6 flex flex-col translate-y-[calc(100%-5rem)] group-hover:translate-y-0 transition-all duration-500 ease-in-out bg-transparent group-hover:bg-white/95 group-hover:backdrop-blur-md border-t border-transparent group-hover:border-gray-100">
                   <div className="flex justify-between items-start mb-2">
-                    <h3 className="text-2xl font-serif text-brandPink group-[&:not(:hover)]:text-white group-[&:not(:hover)]:drop-shadow-lg transition-colors">{service.title}</h3>
-                    <span className="bg-brandLightPink text-brandPink px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">{service.category}</span>
+                    <h3 className="text-2xl font-serif text-brandBlack group-[&:not(:hover)]:text-white group-[&:not(:hover)]:drop-shadow-lg transition-colors">{service.title}</h3>
+                    <span className="bg-brandSilver text-brandBlack px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">{service.category}</span>
                   </div>
                   
                   <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 flex flex-col">
@@ -110,21 +81,20 @@ const Services = () => {
                     
                     <div className="flex justify-between items-center mb-6 pt-4 border-t border-gray-200">
                       <div className="flex items-center text-gray-800">
-                        <IndianRupee size={16} className="text-brandPink mr-1" />
+                        <IndianRupee size={16} className="text-brandBlack mr-1" />
                         <span className="font-bold">{service.price}</span>
                       </div>
                       <div className="flex items-center text-gray-800">
-                        <Clock size={16} className="text-brandPink mr-1" />
+                        <Clock size={16} className="text-brandBlack mr-1" />
                         <span className="text-sm font-bold">{service.duration}</span>
                       </div>
                     </div>
 
                     <button 
-                      onClick={() => handleWhatsAppBooking(service.title)}
-                      className="w-full py-3 px-4 bg-[#25D366] hover:bg-[#128C7E] text-white rounded-xl flex items-center justify-center space-x-2 transition-colors font-medium shadow-lg"
+                      onClick={() => handleBookNow(service.title)}
+                      className="w-full py-3 px-4 bg-brandBlack hover:bg-gray-800 text-white rounded-xl flex items-center justify-center space-x-2 transition-colors font-medium shadow-lg"
                     >
-                      <FaWhatsapp size={20} />
-                      <span>Book on WhatsApp</span>
+                      <span>Book Now</span>
                     </button>
                   </div>
                 </div>

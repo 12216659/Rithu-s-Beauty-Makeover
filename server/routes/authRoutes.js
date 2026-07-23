@@ -6,7 +6,17 @@ const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
+const { OAuth2Client } = require('google-auth-library');
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const rateLimit = require('express-rate-limit');
+
 const { protect } = require('../middleware/authMiddleware');
+
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 10, // Limit each IP to 10 requests per window
+    message: 'Too many authentication attempts, please try again in 15 minutes'
+});
 
 
 // ==========================
@@ -28,7 +38,7 @@ const generateToken = (id) => {
 // ==========================
 // CLIENT SIGNUP
 // ==========================
-router.post('/signup', async (req, res) => {
+router.post('/signup', authLimiter, async (req, res) => {
 
     try {
 
@@ -121,7 +131,7 @@ router.post('/signup', async (req, res) => {
 // ==========================
 // CLIENT LOGIN
 // ==========================
-router.post('/login', async (req, res) => {
+router.post('/login', authLimiter, async (req, res) => {
 
     try {
 
@@ -177,6 +187,54 @@ router.post('/login', async (req, res) => {
 
     }
 
+});
+
+
+// ==========================
+// GOOGLE LOGIN / SIGNUP
+// ==========================
+router.post('/google', async (req, res) => {
+    try {
+        const { credential } = req.body;
+        
+        // Verify Google token
+        const ticket = await googleClient.verifyIdToken({
+            idToken: credential,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
+        const payload = ticket.getPayload();
+        
+        const { email, name } = payload;
+        
+        // Check if user exists
+        let user = await User.findOne({ email });
+        
+        if (!user) {
+            // Create user without password
+            user = await User.create({
+                fullName: name,
+                email,
+                role: 'user',
+                // phone and password are not required now
+            });
+        }
+        
+        res.json({
+            _id: user._id,
+            fullName: user.fullName,
+            email: user.email,
+            phone: user.phone || '',
+            role: user.role || 'user',
+            token: generateToken(user._id),
+            message: 'Google login successful',
+        });
+        
+    } catch (error) {
+        console.error('Google Auth Error:', error);
+        res.status(500).json({
+            message: 'Google Authentication failed',
+        });
+    }
 });
 
 
@@ -254,5 +312,35 @@ router.get('/me', protect, async (req, res) => {
 
 });
 
+
+// ==========================
+// UPDATE CURRENT USER
+// ==========================
+router.put('/profile', protect, async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        if (user) {
+            user.fullName = req.body.fullName || user.fullName;
+            user.phone = req.body.phone !== undefined ? req.body.phone : user.phone;
+            user.address = req.body.address !== undefined ? req.body.address : user.address;
+            
+            const updatedUser = await user.save();
+            
+            res.json({
+                _id: updatedUser._id,
+                fullName: updatedUser.fullName,
+                email: updatedUser.email,
+                phone: updatedUser.phone,
+                address: updatedUser.address,
+                role: updatedUser.role,
+                token: generateToken(updatedUser._id) // optionally refresh token
+            });
+        } else {
+            res.status(404).json({ message: 'User not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
 
 module.exports = router;

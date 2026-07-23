@@ -19,7 +19,7 @@ const ManageServices = () => {
 
   const fetchServices = async () => {
     try {
-      const { data } = await axios.get('https://rithusbackend.onrender.com/api/services');
+      const { data } = await axios.get(`${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/services`);
       setServices(data);
     } catch (err) {
       console.error('Error fetching services:', err);
@@ -71,10 +71,10 @@ const ManageServices = () => {
       const headers = { Authorization: `Bearer ${token}` };
 
       if (formData._id) {
-        await axios.put(`https://rithusbackend.onrender.com/api/services/${formData._id}`, formData, { headers });
+        await axios.put(`http://localhost:5000/api/services/${formData._id}`, formData, { headers });
       } else {
         const { _id, ...newServiceData } = formData;
-        await axios.post('https://rithusbackend.onrender.com/api/services', newServiceData, { headers });
+        await axios.post(`${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/services`, newServiceData, { headers });
       }
       
       await fetchServices();
@@ -91,7 +91,7 @@ const ManageServices = () => {
     if(window.confirm("Delete this service?")) {
       try {
         const token = localStorage.getItem('token');
-        await axios.delete(`https://rithusbackend.onrender.com/api/services/${id}`, {
+        await axios.delete(`http://localhost:5000/api/services/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setServices(services.filter(s => s._id !== id));
@@ -105,7 +105,7 @@ const ManageServices = () => {
   return (
     <div className="p-6 text-gray-900 w-full max-w-6xl mx-auto">
       <div className="flex justify-between items-center mb-8">
-        <h2 className="text-3xl font-serif text-brandPink">Service Management</h2>
+        <h2 className="text-3xl font-serif text-brandBlack">Service Management</h2>
         <button onClick={() => handleOpenModal()} className="btn-primary py-2 px-4 text-sm flex items-center gap-2">
           <Plus size={16} /> Add New Service
         </button>
@@ -113,46 +113,46 @@ const ManageServices = () => {
 
       {fetching ? (
         <div className="flex justify-center items-center h-64">
-          <Loader2 className="animate-spin text-brandPink" size={48} />
+          <Loader2 className="animate-spin text-brandBlack" size={48} />
         </div>
       ) : services.length === 0 ? (
-        <div className="text-center py-20 glass-card">
-          <p className="text-gray-500">No services found. Add your first service!</p>
+        <div className="text-center py-20 bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100">
+          <p className="text-gray-500 font-medium">No services found. Add your first service!</p>
         </div>
       ) : (
-        <div className="glass-card overflow-hidden shadow-xl border border-white/20">
+        <div className="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-gray-100 bg-gray-50/50">
-                  <th className="p-4 font-bold text-gray-700 uppercase tracking-wider text-xs">Service Name</th>
-                  <th className="p-4 font-bold text-gray-700 uppercase tracking-wider text-xs">Price (₹)</th>
-                  <th className="p-4 font-bold text-gray-700 uppercase tracking-wider text-xs">Duration</th>
-                  <th className="p-4 font-bold text-gray-700 uppercase tracking-wider text-xs">Category</th>
-                  <th className="p-4 font-bold text-gray-700 uppercase tracking-wider text-xs text-right">Actions</th>
+                <tr className="bg-gray-50/50 border-b border-gray-100">
+                  <th className="p-5 font-bold text-gray-400 uppercase tracking-widest text-[10px]">Service Name</th>
+                  <th className="p-5 font-bold text-gray-400 uppercase tracking-widest text-[10px]">Price (₹)</th>
+                  <th className="p-5 font-bold text-gray-400 uppercase tracking-widest text-[10px]">Duration</th>
+                  <th className="p-5 font-bold text-gray-400 uppercase tracking-widest text-[10px]">Category</th>
+                  <th className="p-5 font-bold text-gray-400 uppercase tracking-widest text-[10px] text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-gray-50">
                 {services.map((service) => (
-                  <tr key={service._id} className="border-b border-gray-50 hover:bg-white/50 transition-colors">
-                    <td className="p-4 text-gray-900 flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center overflow-hidden border border-gray-200">
+                  <tr key={service._id} className="hover:bg-gray-50/80 transition-colors group">
+                    <td className="p-5 text-gray-900 flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center overflow-hidden border border-gray-100 group-hover:border-gray-300 transition-colors">
                         {service.image ? (
                           <img src={service.image} alt={service.title} className="w-full h-full object-cover" />
                         ) : (
                           <ImageIcon size={20} className="text-gray-400" />
                         )}
                       </div>
-                      <span className="font-medium">{service.title}</span>
+                      <span className="font-bold group-hover:text-brandBlack transition-colors">{service.title}</span>
                     </td>
-                    <td className="p-4 text-gray-600 font-medium">{service.price}</td>
-                    <td className="p-4 text-gray-600">{service.duration}</td>
-                    <td className="p-4">
-                      <span className="bg-brandLightPink text-brandPink px-2 py-1 rounded text-xs font-bold">{service.category}</span>
+                    <td className="p-5 text-gray-600 font-medium font-mono text-sm">₹{service.price}</td>
+                    <td className="p-5 text-gray-500 text-sm">{service.duration}</td>
+                    <td className="p-5">
+                      <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-[10px] uppercase tracking-wider font-bold border border-gray-200">{service.category}</span>
                     </td>
-                    <td className="p-4 text-right">
-                      <button onClick={() => handleOpenModal(service)} className="text-blue-500 hover:bg-blue-50 p-2 rounded-full transition-colors"><Edit2 size={18} /></button>
-                      <button onClick={() => handleDelete(service._id)} className="text-red-500 hover:bg-red-50 p-2 rounded-full transition-colors"><Trash2 size={18} /></button>
+                    <td className="p-5 text-right space-x-2">
+                      <button onClick={() => handleOpenModal(service)} className="text-gray-400 hover:text-blue-600 hover:bg-blue-50 p-2 rounded-full transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100"><Edit2 size={18} /></button>
+                      <button onClick={() => handleDelete(service._id)} className="text-gray-400 hover:text-red-500 hover:bg-red-50 p-2 rounded-full transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100"><Trash2 size={18} /></button>
                     </td>
                   </tr>
                 ))}
@@ -163,15 +163,15 @@ const ManageServices = () => {
       )}
 
       {isModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className="bg-brandLightPink border border-gray-200 rounded-2xl w-full max-w-md p-6 relative shadow-2xl">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-gray-900/40 backdrop-blur-md p-4">
+          <div className="bg-white rounded-3xl w-full max-w-md p-8 relative shadow-2xl">
             <button 
               onClick={() => setIsModalOpen(false)}
-              className="absolute top-4 right-4 text-gray-600 hover:text-gray-900 transition-colors"
+              className="absolute top-6 right-6 text-gray-400 hover:text-gray-900 hover:bg-gray-100 p-2 rounded-full transition-colors"
             >
-              <X size={24} />
+              <X size={20} />
             </button>
-            <h3 className="text-2xl font-serif text-brandPink mb-6">
+            <h3 className="text-2xl font-serif text-brandBlack mb-8">
               {formData._id ? 'Edit Service' : 'Add New Service'}
             </h3>
             

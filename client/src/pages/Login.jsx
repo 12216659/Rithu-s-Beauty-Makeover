@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Lock } from 'lucide-react';
 import axios from 'axios';
+import { GoogleLogin } from '@react-oauth/google';
 
 const Login = () => {
 
@@ -17,6 +18,35 @@ const Login = () => {
   const navigate = useNavigate();
 
   // ==========================
+  // HANDLE GOOGLE LOGIN
+  // ==========================
+  const handleGoogleSuccess = async (credentialResponse) => {
+    setLoading(true);
+    setError('');
+    
+    try {
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/auth/google`,
+        { credential: credentialResponse.credential }
+      );
+
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data));
+
+      if (data.role && data.role.toLowerCase() === 'admin') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/');
+      }
+    } catch (err) {
+      console.error(err);
+      setError(err.response?.data?.message || 'Google Login failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ==========================
   // HANDLE LOGIN
   // ==========================
   const handleSubmit = async (e) => {
@@ -29,7 +59,7 @@ const Login = () => {
     try {
 
       const { data } = await axios.post(
-        'https://rithusbackend.onrender.com/api/auth/login',
+        `${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/auth/login`,
         credentials
       );
 
@@ -81,7 +111,7 @@ const Login = () => {
 
   return (
 
-    <div className="min-h-screen bg-brandLightPink flex items-center justify-center px-4">
+    <div className="min-h-screen bg-brandSilver flex items-center justify-center px-4">
 
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
@@ -90,14 +120,14 @@ const Login = () => {
       >
 
         {/* TOP BORDER */}
-        <div className="absolute top-0 left-0 w-full h-1 bg-brandPink"></div>
+        <div className="absolute top-0 left-0 w-full h-1 bg-brandBlack"></div>
 
         {/* HEADER */}
         <div className="text-center mb-8">
 
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-brandLightPink mb-4 border border-pink-100">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-brandSilver mb-4 border border-[#af956b]/20">
             <Lock
-              className="text-brandPink"
+              className="text-brandBlack"
               size={28}
             />
           </div>
@@ -144,7 +174,7 @@ const Login = () => {
                   email: e.target.value
                 })
               }
-              className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-brandPink focus:bg-white transition-colors"
+              className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-brandBlack focus:bg-white transition-colors"
               placeholder="Enter your email"
             />
 
@@ -167,7 +197,7 @@ const Login = () => {
                   password: e.target.value
                 })
               }
-              className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-brandPink focus:bg-white transition-colors"
+              className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-brandBlack focus:bg-white transition-colors"
               placeholder="Enter your password"
             />
 
@@ -188,6 +218,24 @@ const Login = () => {
 
         </form>
 
+        {/* OR DIVIDER */}
+        <div className="flex items-center my-6">
+          <div className="flex-1 border-t border-gray-300"></div>
+          <span className="px-4 text-sm text-gray-500 font-medium">OR</span>
+          <div className="flex-1 border-t border-gray-300"></div>
+        </div>
+
+        {/* GOOGLE LOGIN BUTTON */}
+        <div className="flex justify-center mb-6">
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={() => {
+              console.log('Login Failed');
+              setError('Google Login failed');
+            }}
+          />
+        </div>
+
         {/* SIGNUP LINK */}
         <div className="mt-6 text-center">
 
@@ -197,7 +245,7 @@ const Login = () => {
 
             <Link
               to="/signup"
-              className="text-brandPink font-bold hover:underline"
+              className="text-brandBlack font-bold hover:underline"
             >
               Sign up here
             </Link>

@@ -12,7 +12,7 @@ const Gallery = () => {
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const { data } = await axios.get('https://rithusbackend.onrender.com/api/gallery');
+        const { data } = await axios.get(`${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/gallery`);
         setImages(data);
       } catch (err) {
         console.error('Error fetching gallery:', err);
@@ -30,14 +30,14 @@ const Gallery = () => {
     : images.filter(img => img.category === filter);
 
   return (
-    <div className="min-h-screen bg-white py-24">
+    <div className="min-h-screen bg-transparent py-24 relative z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
-          <h1 className="text-4xl md:text-5xl font-serif text-gray-900 mb-4">Our <span className="text-brandPink">Gallery</span></h1>
+          <h1 className="text-4xl md:text-5xl font-serif text-gray-900 mb-4">Our <span className="text-brandBlack">Gallery</span></h1>
           <p className="text-gray-600 max-w-2xl mx-auto mb-8 font-medium">Take a look at some of our finest transformations.</p>
           
           {/* Categories Filter */}
@@ -48,7 +48,7 @@ const Gallery = () => {
                 onClick={() => setFilter(cat)}
                 className={`px-6 py-2 rounded-full text-sm transition-all duration-300 font-semibold ${
                   filter === cat 
-                    ? 'bg-brandPink text-white shadow-md' 
+                    ? 'bg-brandBlack text-white shadow-md' 
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
@@ -60,7 +60,7 @@ const Gallery = () => {
 
         {loading ? (
           <div className="flex justify-center items-center h-64">
-            <Loader2 className="animate-spin text-brandPink" size={48} />
+            <Loader2 className="animate-spin text-brandBlack" size={48} />
           </div>
         ) : images.length === 0 ? (
           <div className="text-center py-20 bg-gray-50 rounded-2xl">
@@ -80,7 +80,7 @@ const Gallery = () => {
                   className="relative overflow-hidden rounded-2xl group cursor-pointer break-inside-avoid"
                   onClick={() => setSelectedImage(img.image)}
                 >
-                  <div className="absolute inset-0 bg-brandPink/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 flex items-center justify-center backdrop-blur-sm">
+                  <div className="absolute inset-0 bg-brandBlack/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 flex items-center justify-center backdrop-blur-sm">
                     <span className="text-white font-serif tracking-wider text-xl font-bold drop-shadow-md">{img.category}</span>
                   </div>
                   <img 
@@ -106,7 +106,7 @@ const Gallery = () => {
               onClick={() => setSelectedImage(null)}
             >
               <button 
-                className="absolute top-6 right-6 text-white hover:text-brandPink transition-colors"
+                className="absolute top-6 right-6 text-white hover:text-brandBlack transition-colors"
                 onClick={() => setSelectedImage(null)}
               >
                 <X size={32} />

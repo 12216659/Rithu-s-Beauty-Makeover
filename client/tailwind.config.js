@@ -7,11 +7,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        brandBlack: '#0d0d0d',
-        brandRoseGold: '#d4a373',
-        brandSoftGold: '#f5d7b2',
-        brandPink: '#FA2A74',
-        brandLightPink: '#FFF0F5',
+        brandBlack: '#0a0a0a',
+        brandWhite: '#ffffff',
+        brandGray: '#8a8a8a',
+        brandSilver: '#e5e5e5',
+        brandDarkGray: '#1a1a1a',
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],

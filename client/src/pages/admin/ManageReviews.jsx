@@ -11,7 +11,7 @@ const ManageReviews = () => {
 
   const fetchReviews = async () => {
     try {
-      const { data } = await axios.get('https://rithusbackend.onrender.com/api/reviews');
+      const { data } = await axios.get(`${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/reviews`);
       setReviews(data);
     } catch (err) {
       console.error('Error fetching reviews:', err);
@@ -48,7 +48,7 @@ const ManageReviews = () => {
       // Fallback profile image if not uploaded
       const finalImage = formData.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.name)}&background=random`;
 
-      await axios.post('https://rithusbackend.onrender.com/api/reviews', {
+      await axios.post(`${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/reviews`, {
         ...formData,
         image: finalImage,
         rating: Number(formData.rating)
@@ -71,7 +71,7 @@ const ManageReviews = () => {
     if(window.confirm("Delete this review?")) {
       try {
         const token = localStorage.getItem('token');
-        await axios.delete(`https://rithusbackend.onrender.com/api/reviews/${id}`, {
+        await axios.delete(`http://localhost:5000/api/reviews/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setReviews(reviews.filter(r => r._id !== id));
@@ -85,7 +85,7 @@ const ManageReviews = () => {
   return (
     <div className="p-6 text-gray-900 w-full max-w-6xl mx-auto">
       <div className="flex justify-between items-center mb-8">
-        <h2 className="text-3xl font-serif text-brandPink">Review Management</h2>
+        <h2 className="text-3xl font-serif text-brandBlack">Review Management</h2>
         <button onClick={() => setIsModalOpen(true)} className="btn-primary py-2 px-4 text-sm flex items-center gap-2">
           <Plus size={16} /> Add Review
         </button>
@@ -93,7 +93,7 @@ const ManageReviews = () => {
 
       {fetching ? (
         <div className="flex justify-center items-center h-64">
-          <Loader2 className="animate-spin text-brandPink" size={48} />
+          <Loader2 className="animate-spin text-brandBlack" size={48} />
         </div>
       ) : reviews.length === 0 ? (
         <div className="text-center py-20 glass-card">
@@ -107,7 +107,7 @@ const ManageReviews = () => {
               <div className="flex-1">
                 <div className="flex justify-between items-start mb-2">
                   <h3 className="font-bold text-lg text-gray-900">{review.name}</h3>
-                  <div className="flex text-brandPink">
+                  <div className="flex text-brandBlack">
                     {[...Array(review.rating)].map((_, i) => (
                       <Star key={i} size={14} fill="currentColor" />
                     ))}
@@ -128,14 +128,14 @@ const ManageReviews = () => {
 
       {isModalOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className="bg-brandLightPink border border-gray-200 rounded-2xl w-full max-w-md p-6 relative shadow-2xl">
+          <div className="bg-brandSilver border border-gray-200 rounded-2xl w-full max-w-md p-6 relative shadow-2xl">
             <button 
               onClick={() => setIsModalOpen(false)}
               className="absolute top-4 right-4 text-gray-600 hover:text-gray-900 transition-colors"
             >
               <X size={24} />
             </button>
-            <h3 className="text-2xl font-serif text-brandPink mb-6">
+            <h3 className="text-2xl font-serif text-brandBlack mb-6">
               Add Customer Review
             </h3>
             
@@ -145,7 +145,7 @@ const ManageReviews = () => {
                 <input 
                   required type="text" 
                   value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})}
-                  className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2 text-gray-900 focus:border-brandPink outline-none"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2 text-gray-900 focus:border-brandBlack outline-none"
                 />
               </div>
 
@@ -154,7 +154,7 @@ const ManageReviews = () => {
                 <select 
                   value={formData.rating} 
                   onChange={e => setFormData({...formData, rating: Number(e.target.value)})}
-                  className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2 text-gray-900 focus:border-brandPink outline-none appearance-none cursor-pointer"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2 text-gray-900 focus:border-brandBlack outline-none appearance-none cursor-pointer"
                 >
                   {[1, 2, 3, 4, 5].map(num => (
                     <option key={num} value={num}>{num} Stars</option>
@@ -167,13 +167,13 @@ const ManageReviews = () => {
                 <textarea 
                   required rows="3"
                   value={formData.message} onChange={e => setFormData({...formData, message: e.target.value})}
-                  className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2 text-gray-900 focus:border-brandPink outline-none resize-none"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2 text-gray-900 focus:border-brandBlack outline-none resize-none"
                 />
               </div>
 
               <div>
                 <label className="block text-sm text-gray-600 mb-1 font-medium">Profile Image (Optional)</label>
-                <div className="relative w-full h-20 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center overflow-hidden hover:border-brandPink transition-colors cursor-pointer bg-gray-50">
+                <div className="relative w-full h-20 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center overflow-hidden hover:border-brandBlack transition-colors cursor-pointer bg-gray-50">
                   {formData.image ? (
                     <img src={formData.image} alt="Preview" className="absolute inset-0 w-full h-full object-cover opacity-60" />
                   ) : (

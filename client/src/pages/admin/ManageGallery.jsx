@@ -12,7 +12,7 @@ const ManageGallery = () => {
 
   const fetchImages = async () => {
     try {
-      const { data } = await axios.get('https://rithusbackend.onrender.com/api/gallery');
+      const { data } = await axios.get(`${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/gallery`);
       setImages(data);
     } catch (err) {
       console.error('Error fetching gallery:', err);
@@ -54,7 +54,7 @@ const ManageGallery = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      await axios.post('https://rithusbackend.onrender.com/api/gallery', {
+      await axios.post(`${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/gallery`, {
         image: formData.image,
         category: formData.category || 'Uncategorized'
       }, {
@@ -76,7 +76,7 @@ const ManageGallery = () => {
     if (window.confirm("Delete this image from gallery?")) {
       try {
         const token = localStorage.getItem('token');
-        await axios.delete(`https://rithusbackend.onrender.com/api/gallery/${id}`, {
+        await axios.delete(`http://localhost:5000/api/gallery/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setImages(images.filter(i => i._id !== id));
@@ -90,7 +90,7 @@ const ManageGallery = () => {
   return (
     <div className="p-6 text-gray-900 w-full max-w-6xl mx-auto">
       <div className="flex justify-between items-center mb-8">
-        <h2 className="text-3xl font-serif text-brandPink">Gallery Management</h2>
+        <h2 className="text-3xl font-serif text-brandBlack">Gallery Management</h2>
         <button onClick={() => setIsModalOpen(true)} className="btn-primary py-2 px-4 text-sm flex items-center gap-2">
           <UploadCloud size={16} /> Upload Images
         </button>
@@ -98,7 +98,7 @@ const ManageGallery = () => {
 
       {fetching ? (
         <div className="flex justify-center items-center h-64">
-          <Loader2 className="animate-spin text-brandPink" size={48} />
+          <Loader2 className="animate-spin text-brandBlack" size={48} />
         </div>
       ) : images.length === 0 ? (
         <div className="text-center py-20 glass-card">
@@ -122,14 +122,14 @@ const ManageGallery = () => {
 
       {isModalOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className="bg-brandLightPink border border-gray-200 rounded-2xl w-full max-w-md p-6 relative shadow-2xl">
+          <div className="bg-brandSilver border border-gray-200 rounded-2xl w-full max-w-md p-6 relative shadow-2xl">
             <button
               onClick={() => setIsModalOpen(false)}
               className="absolute top-4 right-4 text-gray-600 hover:text-gray-900 transition-colors"
             >
               <X size={24} />
             </button>
-            <h3 className="text-2xl font-serif text-brandPink mb-6">
+            <h3 className="text-2xl font-serif text-brandBlack mb-6">
               Upload New Image
             </h3>
 
@@ -173,12 +173,12 @@ const ManageGallery = () => {
                   >
                     {dynamicCategories.length > 0 ? (
                       dynamicCategories.map(cat => (
-                        <option key={cat} value={cat} className="bg-brandLightPink">{cat}</option>
+                        <option key={cat} value={cat} className="bg-brandSilver">{cat}</option>
                       ))
                     ) : (
-                      <option value="" disabled className="bg-brandLightPink">No categories found</option>
+                      <option value="" disabled className="bg-brandSilver">No categories found</option>
                     )}
-                    <option value="__NEW__" className="bg-brandLightPink text-brandPink font-bold">+ Create New Category...</option>
+                    <option value="__NEW__" className="bg-brandSilver text-brandBlack font-bold">+ Create New Category...</option>
                   </select>
                 )}
               </div>

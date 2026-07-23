@@ -1,4 +1,4 @@
-# Rithu's Beauty Makeover
+# Rithus Beauty Hub
 
 A modern, premium full-stack beauty parlour website built with React.js, Node.js, Express, and MongoDB.
 

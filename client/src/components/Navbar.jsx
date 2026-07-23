@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 
 const Navbar = () => {
@@ -8,13 +9,23 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const token = localStorage.getItem('token');
+  const [token, setToken] = useState(localStorage.getItem('token'));
+  const [user, setUser] = useState(null);
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    navigate('/login');
-  };
+  useEffect(() => {
+    const handleUpdate = () => {
+      setToken(localStorage.getItem('token'));
+      const u = localStorage.getItem('user');
+      if (u) {
+        try { setUser(JSON.parse(u)); } catch(e) { setUser(null); }
+      } else {
+        setUser(null);
+      }
+    };
+    handleUpdate();
+    window.addEventListener('storage', handleUpdate);
+    return () => window.removeEventListener('storage', handleUpdate);
+  }, [location]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -34,44 +45,67 @@ const Navbar = () => {
   return (
     <div className="fixed w-full z-50 transition-all duration-300">
       {/* Main Navbar */}
-      <nav className={`w-full transition-all duration-300 ${scrolled ? 'bg-white shadow-md py-4' : (location.pathname === '/' ? 'bg-transparent py-6' : 'bg-white py-6')}`}>
+      <nav className={`w-full transition-all duration-300 ${scrolled ? 'bg-white shadow-md py-3' : (location.pathname === '/' ? 'bg-transparent py-4' : 'bg-white py-4')}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center relative">
             
             {/* Desktop Nav - Left */}
-            <div className="hidden md:flex items-center space-x-8 w-1/3">
-              <Link to="/" className={`text-sm font-semibold uppercase tracking-widest transition-colors ${location.pathname === '/' ? 'text-brandPink' : 'text-gray-800 hover:text-brandPink'}`}>Home</Link>
-              <Link to="/about" className={`text-sm font-semibold uppercase tracking-widest transition-colors ${location.pathname === '/about' ? 'text-brandPink' : 'text-gray-800 hover:text-brandPink'}`}>About Us</Link>
-              <Link to="/services" className={`text-sm font-semibold uppercase tracking-widest transition-colors ${location.pathname === '/services' ? 'text-brandPink' : 'text-gray-800 hover:text-brandPink'}`}>Services</Link>
+            <div className="hidden md:flex items-center space-x-6 w-1/3">
+              <Link to="/" className={`text-sm font-semibold uppercase tracking-widest transition-colors ${location.pathname === '/' ? 'text-brandBlack' : 'text-gray-800 hover:text-brandBlack'}`}>Home</Link>
+              <Link to="/about" className={`text-sm font-semibold uppercase tracking-widest transition-colors ${location.pathname === '/about' ? 'text-brandBlack' : 'text-gray-800 hover:text-brandBlack'}`}>About Us</Link>
+              <Link to="/services" className={`text-sm font-semibold uppercase tracking-widest transition-colors ${location.pathname === '/services' ? 'text-brandBlack' : 'text-gray-800 hover:text-brandBlack'}`}>Services</Link>
             </div>
 
             {/* Logo - Center */}
-            <div className="w-1/3 flex justify-center">
-              <Link to="/" className="text-3xl font-serif text-brandPink font-bold flex items-center gap-2">
-                Rithu's Makeover
+            <div className="w-1/3 flex justify-center py-1">
+              <Link to="/" className="flex items-center gap-3 group select-none">
+                {/* 3D Animated Logo Image */}
+                <motion.div 
+                  className="w-12 h-12 mix-blend-multiply"
+                  animate={{ rotateY: 360 }}
+                  transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+                  style={{ transformStyle: 'preserve-3d' }}
+                >
+                  <img src="/logo.png" alt="Rithus Beauty Hub Logo" className="w-full h-full object-contain" />
+                </motion.div>
+                
+                {/* Separator line */}
+                <div className="h-7 w-px bg-gray-200"></div>
+                
+                {/* Text */}
+                <div className="flex flex-col justify-center text-left">
+                  <span className="text-lg font-serif text-brandBlack font-bold tracking-[0.1em] leading-none mb-0.5 group-hover:text-brandBlack transition-colors">
+                    RITHUS
+                  </span>
+                  <span className="text-[9px] font-sans tracking-[0.2em] text-gray-500 font-semibold uppercase leading-none">
+                    BEAUTY HUB
+                  </span>
+                </div>
               </Link>
             </div>
 
             {/* Desktop Nav - Right */}
-            <div className="hidden md:flex items-center justify-end space-x-8 w-1/3">
-              <Link to="/gallery" className={`text-sm font-semibold uppercase tracking-widest transition-colors ${location.pathname === '/gallery' ? 'text-brandPink' : 'text-gray-800 hover:text-brandPink'}`}>Gallery</Link>
-              <Link to="/book" className={`text-sm font-semibold uppercase tracking-widest transition-colors ${location.pathname === '/book' ? 'text-brandPink' : 'text-gray-800 hover:text-brandPink'}`}>Book Appointment</Link>
+            <div className="hidden md:flex items-center justify-end space-x-6 w-1/3">
+              <Link to="/gallery" className={`text-sm font-semibold uppercase tracking-widest transition-colors ${location.pathname === '/gallery' ? 'text-brandBlack' : 'text-gray-800 hover:text-brandBlack'}`}>Gallery</Link>
+              <Link to="/book" className={`text-sm font-semibold uppercase tracking-widest transition-colors ${location.pathname === '/book' ? 'text-brandBlack' : 'text-gray-800 hover:text-brandBlack'}`}>Book Now</Link>
               
-              {token ? (
-                <button onClick={handleLogout} className="text-sm font-semibold uppercase tracking-widest text-gray-800 hover:text-brandPink transition-colors">Logout</button>
+              {token && user ? (
+                <div className="flex items-center space-x-4">
+                  <Link to={user.role === 'admin' ? "/admin/dashboard" : "/profile"} title="My Profile" className="flex items-center justify-center w-9 h-9 rounded-full bg-brandBlack text-white font-bold uppercase text-lg shadow-md hover:scale-105 transition-transform">
+                    {user.fullName ? user.fullName[0] : 'U'}
+                  </Link>
+                </div>
               ) : (
                 <>
-                  <Link to="/login" className="text-sm font-semibold uppercase tracking-widest text-gray-800 hover:text-brandPink transition-colors">Login</Link>
-                  <Link to="/signup" className="text-sm font-semibold uppercase tracking-widest text-brandPink hover:text-pink-600 transition-colors">Sign Up</Link>
+                  <Link to="/login" className="text-sm font-semibold uppercase tracking-widest text-gray-800 hover:text-brandBlack transition-colors">Login</Link>
+                  <Link to="/signup" className="text-sm font-semibold uppercase tracking-widest text-brandBlack hover:text-brandGray transition-colors">Sign Up</Link>
                 </>
               )}
-              
-
             </div>
 
             {/* Mobile Menu Button */}
             <div className="md:hidden flex items-center absolute right-0">
-              <button onClick={() => setIsOpen(!isOpen)} className="text-brandPink focus:outline-none">
+              <button onClick={() => setIsOpen(!isOpen)} className="text-brandBlack focus:outline-none">
                 {isOpen ? <X size={28} /> : <Menu size={28} />}
               </button>
             </div>
@@ -82,18 +116,25 @@ const Navbar = () => {
         {isOpen && (
           <div className="md:hidden absolute top-full left-0 w-full bg-white border-t border-gray-100 py-4 px-4 shadow-xl">
             <div className="flex flex-col space-y-4">
-              <Link to="/" onClick={() => setIsOpen(false)} className="text-base uppercase font-semibold text-gray-800 hover:text-brandPink">Home</Link>
-              <Link to="/about" onClick={() => setIsOpen(false)} className="text-base uppercase font-semibold text-gray-800 hover:text-brandPink">About Us</Link>
-              <Link to="/services" onClick={() => setIsOpen(false)} className="text-base uppercase font-semibold text-gray-800 hover:text-brandPink">Services</Link>
-              <Link to="/gallery" onClick={() => setIsOpen(false)} className="text-base uppercase font-semibold text-gray-800 hover:text-brandPink">Gallery</Link>
-              <Link to="/book" onClick={() => setIsOpen(false)} className="text-base uppercase font-semibold text-gray-800 hover:text-brandPink">Book Appointment</Link>
+              <Link to="/" onClick={() => setIsOpen(false)} className="text-base uppercase font-semibold text-gray-800 hover:text-brandBlack">Home</Link>
+              <Link to="/about" onClick={() => setIsOpen(false)} className="text-base uppercase font-semibold text-gray-800 hover:text-brandBlack">About Us</Link>
+              <Link to="/services" onClick={() => setIsOpen(false)} className="text-base uppercase font-semibold text-gray-800 hover:text-brandBlack">Services</Link>
+              <Link to="/gallery" onClick={() => setIsOpen(false)} className="text-base uppercase font-semibold text-gray-800 hover:text-brandBlack">Gallery</Link>
+              <Link to="/book" onClick={() => setIsOpen(false)} className="text-base uppercase font-semibold text-gray-800 hover:text-brandBlack">Book Appointment</Link>
               
-              {token ? (
-                <button onClick={() => { setIsOpen(false); handleLogout(); }} className="text-left text-base uppercase font-semibold text-gray-800 hover:text-brandPink">Logout</button>
+              {token && user ? (
+                <>
+                  <Link to={user.role === 'admin' ? "/admin/dashboard" : "/profile"} onClick={() => setIsOpen(false)} className="flex items-center space-x-3 text-base uppercase font-semibold text-gray-800 hover:text-brandBlack">
+                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-brandBlack text-white font-bold uppercase text-sm shadow-md">
+                      {user.fullName ? user.fullName[0] : 'U'}
+                    </div>
+                    <span>My Profile</span>
+                  </Link>
+                </>
               ) : (
                 <>
-                  <Link to="/login" onClick={() => setIsOpen(false)} className="text-base uppercase font-semibold text-gray-800 hover:text-brandPink">Login</Link>
-                  <Link to="/signup" onClick={() => setIsOpen(false)} className="text-base uppercase font-semibold text-brandPink hover:text-pink-600">Sign Up</Link>
+                  <Link to="/login" onClick={() => setIsOpen(false)} className="text-base uppercase font-semibold text-gray-800 hover:text-brandBlack">Login</Link>
+                  <Link to="/signup" onClick={() => setIsOpen(false)} className="text-base uppercase font-semibold text-brandBlack hover:text-brandGray">Sign Up</Link>
                 </>
               )}
               

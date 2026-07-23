@@ -5,10 +5,20 @@ const { protect, admin } = require('../middleware/authMiddleware');
 
 router.post('/', protect, async (req, res) => {
     try {
-        const booking = await Booking.create(req.body);
+        const bookingData = { ...req.body, user: req.user._id };
+        const booking = await Booking.create(bookingData);
         res.status(201).json(booking);
     } catch (error) {
         res.status(400).json({ message: error.message });
+    }
+});
+
+router.get('/mybookings', protect, async (req, res) => {
+    try {
+        const bookings = await Booking.find({ user: req.user._id }).sort('-createdAt');
+        res.json(bookings);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 });
 

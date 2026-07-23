@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { UserPlus } from 'lucide-react';
 import axios from 'axios';
+import { GoogleLogin } from '@react-oauth/google';
 
 const Signup = () => {
 
@@ -20,6 +21,37 @@ const Signup = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // ==========================
+  // HANDLE GOOGLE LOGIN/SIGNUP
+  // ==========================
+  const handleGoogleSuccess = async (credentialResponse) => {
+    setLoading(true);
+    setError('');
+    setSuccess('');
+    
+    try {
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/auth/google`,
+        { credential: credentialResponse.credential }
+      );
+
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data));
+
+      setSuccess('Account created/logged in successfully via Google');
+
+      setTimeout(() => {
+        navigate('/');
+      }, 1500);
+
+    } catch (err) {
+      console.error(err);
+      setError(err.response?.data?.message || 'Google Authentication failed');
+    } finally {
+      setLoading(false);
+    }
+  };
 
 
   const handleChange = (e) => {
@@ -55,7 +87,7 @@ const Signup = () => {
     try {
 
       const { data } = await axios.post(
-        'https://rithusbackend.onrender.com/api/auth/signup',
+        `${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/auth/signup`,
         {
           fullName: formData.fullName,
           username: formData.username,
@@ -65,8 +97,9 @@ const Signup = () => {
         }
       );
 
-      // Save Token
+      // Save Token and User
       localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data));
 
       setSuccess('Account created successfully');
 
@@ -91,7 +124,7 @@ const Signup = () => {
 
 
   return (
-    <div className="min-h-screen bg-brandLightPink flex items-center justify-center px-4 py-10">
+    <div className="min-h-screen bg-brandSilver flex items-center justify-center px-4 py-10">
 
       <motion.div
         initial={{ opacity: 0, y: 30 }}
@@ -100,13 +133,13 @@ const Signup = () => {
       >
 
         {/* Top Border */}
-        <div className="absolute top-0 left-0 w-full h-1 bg-brandPink"></div>
+        <div className="absolute top-0 left-0 w-full h-1 bg-brandBlack"></div>
 
         {/* Header */}
         <div className="text-center mb-8">
 
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-brandLightPink mb-4 border border-pink-100">
-            <UserPlus className="text-brandPink" size={28} />
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-brandSilver mb-4 border border-[#af956b]/20">
+            <UserPlus className="text-brandBlack" size={28} />
           </div>
 
           <h2 className="text-3xl font-serif text-gray-900">
@@ -114,7 +147,7 @@ const Signup = () => {
           </h2>
 
           <p className="text-gray-500 text-sm mt-2 font-medium">
-            Join Rithu's Beauty Makeover
+            Join Rithus Beauty Hub
           </p>
 
         </div>
@@ -150,7 +183,7 @@ const Signup = () => {
               required
               value={formData.fullName}
               onChange={handleChange}
-              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-brandPink focus:bg-white transition-all"
+              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-brandBlack focus:bg-white transition-all"
             />
           </div>
 
@@ -167,7 +200,7 @@ const Signup = () => {
               required
               value={formData.username}
               onChange={handleChange}
-              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-brandPink focus:bg-white transition-all"
+              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-brandBlack focus:bg-white transition-all"
             />
           </div>
 
@@ -184,7 +217,7 @@ const Signup = () => {
               required
               value={formData.email}
               onChange={handleChange}
-              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-brandPink focus:bg-white transition-all"
+              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-brandBlack focus:bg-white transition-all"
             />
           </div>
 
@@ -201,7 +234,7 @@ const Signup = () => {
               required
               value={formData.phone}
               onChange={handleChange}
-              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-brandPink focus:bg-white transition-all"
+              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-brandBlack focus:bg-white transition-all"
             />
           </div>
 
@@ -218,7 +251,7 @@ const Signup = () => {
               required
               value={formData.password}
               onChange={handleChange}
-              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-brandPink focus:bg-white transition-all"
+              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-brandBlack focus:bg-white transition-all"
             />
           </div>
 
@@ -235,7 +268,7 @@ const Signup = () => {
               required
               value={formData.confirmPassword}
               onChange={handleChange}
-              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-brandPink focus:bg-white transition-all"
+              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-brandBlack focus:bg-white transition-all"
             />
           </div>
 
@@ -244,12 +277,31 @@ const Signup = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-brandPink hover:bg-pink-600 text-white font-semibold py-3 rounded-xl transition-all duration-300"
+            className="w-full bg-brandBlack hover:bg-[#907a53] text-white font-semibold py-3 rounded-xl transition-all duration-300"
           >
             {loading ? 'Creating Account...' : 'Create Account'}
           </button>
 
         </form>
+
+        {/* OR DIVIDER */}
+        <div className="flex items-center my-6">
+          <div className="flex-1 border-t border-gray-300"></div>
+          <span className="px-4 text-sm text-gray-500 font-medium">OR</span>
+          <div className="flex-1 border-t border-gray-300"></div>
+        </div>
+
+        {/* GOOGLE SIGNUP BUTTON */}
+        <div className="flex justify-center mb-6">
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={() => {
+              console.log('Signup Failed');
+              setError('Google Signup failed');
+            }}
+            text="signup_with"
+          />
+        </div>
 
 
         {/* Login Link */}
@@ -261,7 +313,7 @@ const Signup = () => {
 
             <Link
               to="/login"
-              className="text-brandPink font-bold hover:underline"
+              className="text-brandBlack font-bold hover:underline"
             >
               Login here
             </Link>
