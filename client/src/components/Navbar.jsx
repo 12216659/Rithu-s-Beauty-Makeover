@@ -56,8 +56,15 @@ const Navbar = () => {
               <Link to="/services" className={`text-sm font-semibold uppercase tracking-widest transition-colors ${location.pathname === '/services' ? 'text-brandBlack' : 'text-gray-800 hover:text-brandBlack'}`}>Services</Link>
             </div>
 
+            {/* Mobile Menu Button - Left */}
+            <div className="md:hidden flex items-center absolute left-0 z-10">
+              <button onClick={() => setIsOpen(!isOpen)} className="text-brandBlack focus:outline-none p-1">
+                {isOpen ? <X size={28} /> : <Menu size={28} />}
+              </button>
+            </div>
+
             {/* Logo - Center */}
-            <div className="w-1/3 flex justify-center py-1">
+            <div className="w-full md:w-1/3 flex justify-center py-1">
               <Link to="/" className="flex items-center gap-3 group select-none">
                 {/* 3D Animated Logo Image */}
                 <motion.div 
@@ -103,11 +110,17 @@ const Navbar = () => {
               )}
             </div>
 
-            {/* Mobile Menu Button */}
-            <div className="md:hidden flex items-center absolute right-0">
-              <button onClick={() => setIsOpen(!isOpen)} className="text-brandBlack focus:outline-none">
-                {isOpen ? <X size={28} /> : <Menu size={28} />}
-              </button>
+            {/* Mobile User Icon / Login - Right */}
+            <div className="md:hidden flex items-center absolute right-0 z-10">
+              {token && user ? (
+                <Link to={user.role === 'admin' ? "/admin/dashboard" : "/profile"} title="My Profile" className="flex items-center justify-center w-8 h-8 rounded-full bg-brandBlack text-white font-bold uppercase text-sm shadow-md">
+                  {user.fullName ? user.fullName[0] : 'U'}
+                </Link>
+              ) : (
+                <Link to="/login" className="text-xs font-semibold uppercase tracking-widest text-brandBlack border border-brandBlack px-3 py-1.5 rounded-full hover:bg-brandBlack hover:text-white transition-colors">
+                  Login
+                </Link>
+              )}
             </div>
           </div>
         </div>
