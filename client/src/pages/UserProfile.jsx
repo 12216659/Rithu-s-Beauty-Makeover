@@ -35,11 +35,6 @@ const UserProfile = () => {
         if (storedUser) {
           const parsed = JSON.parse(storedUser);
           setUser(parsed);
-          setEditData({
-            fullName: parsed.fullName || '',
-            phone: parsed.phone || '',
-            address: parsed.address || ''
-          });
         }
 
         const res = await axios.get(`${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/bookings/mybookings`, {
@@ -137,6 +132,11 @@ const UserProfile = () => {
                   });
                   setIsEditing(false);
                 } else {
+                  setEditData({
+                    fullName: user?.fullName || '',
+                    phone: user?.phone || '',
+                    address: user?.address || ''
+                  });
                   setIsEditing(true);
                 }
               }}
