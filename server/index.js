@@ -30,9 +30,24 @@ const limiter = rateLimit({
 app.use('/api', limiter);
 
 // Restrict CORS to frontend URL
-const allowedOrigin = process.env.CLIENT_URL || 'http://localhost:5173';
+const allowedOrigins = [
+    'http://localhost:5173',
+    'https://rithus-beauty-makeover.vercel.app',
+    'https://rithusbeautyhub.vercel.app',
+    process.env.CLIENT_URL
+].filter(Boolean);
+
 app.use(cors({
-    origin: allowedOrigin,
+    origin: function(origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        // Allow allowedOrigins or any vercel.app subdomain
+        if (!origin || allowedOrigins.includes(origin) || (origin && origin.endsWith('.vercel.app'))) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true,
     optionsSuccessStatus: 200
 }));
 
