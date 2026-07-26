@@ -53,7 +53,7 @@ const ManageBookings = () => {
     if(window.confirm("Delete this booking?")) {
       try {
         const token = localStorage.getItem('token');
-        await axios.delete(`http://localhost:5000/api/bookings/${id}`, {
+        await axios.delete(`${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/bookings/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setBookings(bookings.filter(b => b._id !== id));
@@ -67,7 +67,7 @@ const ManageBookings = () => {
   const handleStatusChange = async (id, newStatus) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`http://localhost:5000/api/bookings/${id}`, { status: newStatus }, {
+      await axios.put(`${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/bookings/${id}`, { status: newStatus }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setBookings(bookings.map(b => b._id === id ? { ...b, status: newStatus } : b));

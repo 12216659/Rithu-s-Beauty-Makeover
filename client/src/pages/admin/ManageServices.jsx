@@ -71,7 +71,7 @@ const ManageServices = () => {
       const headers = { Authorization: `Bearer ${token}` };
 
       if (formData._id) {
-        await axios.put(`http://localhost:5000/api/services/${formData._id}`, formData, { headers });
+        await axios.put(`${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/services/${formData._id}`, formData, { headers });
       } else {
         const { _id, ...newServiceData } = formData;
         await axios.post(`${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/services`, newServiceData, { headers });
@@ -91,7 +91,7 @@ const ManageServices = () => {
     if(window.confirm("Delete this service?")) {
       try {
         const token = localStorage.getItem('token');
-        await axios.delete(`http://localhost:5000/api/services/${id}`, {
+        await axios.delete(`${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/services/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setServices(services.filter(s => s._id !== id));

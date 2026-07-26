@@ -76,7 +76,7 @@ const ManageGallery = () => {
     if (window.confirm("Delete this image from gallery?")) {
       try {
         const token = localStorage.getItem('token');
-        await axios.delete(`http://localhost:5000/api/gallery/${id}`, {
+        await axios.delete(`${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/gallery/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setImages(images.filter(i => i._id !== id));

@@ -71,7 +71,7 @@ const ManageReviews = () => {
     if(window.confirm("Delete this review?")) {
       try {
         const token = localStorage.getItem('token');
-        await axios.delete(`http://localhost:5000/api/reviews/${id}`, {
+        await axios.delete(`${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/reviews/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setReviews(reviews.filter(r => r._id !== id));
