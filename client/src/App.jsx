@@ -12,7 +12,7 @@ import Signup from './pages/Signup';
 import UserProfile from './pages/UserProfile';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { Sparkles, Scissors, Droplet, Flower2, Heart, Crown, Gem, Star, Brush } from 'lucide-react';
@@ -136,6 +136,58 @@ const ScrollToTop = () => {
   return null;
 };
 
+const IdleTimer = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    let timeoutId;
+    
+    const resetTimer = () => {
+      clearTimeout(timeoutId);
+      // Set timeout for 1 hour (3600000 ms)
+      timeoutId = setTimeout(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          window.dispatchEvent(new Event('storage'));
+          navigate('/login');
+        }
+      }, 3600000);
+    };
+
+    // Events to track activity
+    const events = ['mousemove', 'keydown', 'scroll', 'click', 'touchstart'];
+    
+    // Throttle the event listeners slightly to improve performance
+    let throttleTimer;
+    const handleActivity = () => {
+      if (throttleTimer) return;
+      throttleTimer = setTimeout(() => {
+        resetTimer();
+        throttleTimer = null;
+      }, 500);
+    };
+    
+    events.forEach(event => {
+      window.addEventListener(event, handleActivity);
+    });
+
+    // Initialize timer
+    resetTimer();
+
+    return () => {
+      clearTimeout(timeoutId);
+      clearTimeout(throttleTimer);
+      events.forEach(event => {
+        window.removeEventListener(event, handleActivity);
+      });
+    };
+  }, [navigate]);
+
+  return null;
+};
+
 function App() {
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -162,6 +214,7 @@ function App() {
   return (
     <Router>
       <ScrollToTop />
+      <IdleTimer />
       <div className="flex flex-col min-h-screen bg-transparent relative">
         <AnimatedBackground />
         <ConditionalNavbar />
