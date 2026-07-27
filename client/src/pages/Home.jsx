@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Star, CheckCircle, Loader2 } from 'lucide-react';
 import axios from 'axios';
 import Logo3D from '../components/Logo3D';
+import Loader from '../components/Loader';
 
 const Home = () => {
   const fadeInUp = {
@@ -168,9 +169,7 @@ const Home = () => {
           </div>
           
           {loadingServices ? (
-            <div className="flex justify-center items-center py-20">
-              <Loader2 className="animate-spin text-brandBlack" size={48} />
-            </div>
+            <Loader className="py-20" />
           ) : services.length === 0 ? (
             <div className="text-center py-20 glass-card max-w-2xl mx-auto">
               <p className="text-gray-500">Our premium services will be listed here soon.</p>
@@ -220,9 +219,7 @@ const Home = () => {
           </div>
 
           {loadingReviews ? (
-            <div className="flex justify-center items-center py-20">
-              <Loader2 className="animate-spin text-brandBlack" size={48} />
-            </div>
+            <Loader className="py-20" />
           ) : reviews.length === 0 ? (
             <div className="text-center py-20 glass-card">
               <p className="text-gray-500">No reviews yet. Be the first to leave one!</p>

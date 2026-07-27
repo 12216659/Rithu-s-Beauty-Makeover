@@ -4,6 +4,7 @@ import { FaWhatsapp } from 'react-icons/fa';
 import { Clock, IndianRupee, Loader2 } from 'lucide-react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Loader from '../components/Loader';
 
 const Services = () => {
   const [services, setServices] = useState([]);
@@ -42,9 +43,7 @@ const Services = () => {
         </motion.div>
 
         {loading ? (
-          <div className="flex justify-center items-center h-64">
-            <Loader2 className="animate-spin text-brandBlack" size={48} />
-          </div>
+          <Loader />
         ) : services.length === 0 ? (
           <div className="text-center py-20 bg-gray-50 rounded-2xl">
             <p className="text-gray-500">No services available at the moment.</p>

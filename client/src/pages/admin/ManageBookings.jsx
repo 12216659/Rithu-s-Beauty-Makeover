@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Trash2, Plus, X, Loader2 } from 'lucide-react';
 import axios from 'axios';
+import Loader from '../../components/Loader';
 
 const ManageBookings = () => {
   const [bookings, setBookings] = useState([]);
@@ -96,9 +97,7 @@ const ManageBookings = () => {
       </div>
 
       {fetching ? (
-        <div className="flex justify-center items-center h-64">
-          <Loader2 className="animate-spin text-brandBlack" size={48} />
-        </div>
+        <Loader />
       ) : (
         <div className="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 overflow-hidden">
           <div className="overflow-x-auto">

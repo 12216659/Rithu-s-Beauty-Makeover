@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Users, LayoutDashboard, FileImage, Briefcase, Loader2 } from 'lucide-react';
 import axios from 'axios';
+import Loader from '../../components/Loader';
 
 const DashboardHome = () => {
   const [stats, setStats] = useState([
@@ -62,7 +63,7 @@ const DashboardHome = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-[80vh]">
-        <Loader2 className="animate-spin text-brandBlack" size={48} />
+        <Loader />
       </div>
     );
   }

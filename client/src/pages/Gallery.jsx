@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Loader2 } from 'lucide-react';
 import axios from 'axios';
+import Loader from '../components/Loader';
 
 const Gallery = () => {
   const [images, setImages] = useState([]);
@@ -59,9 +60,7 @@ const Gallery = () => {
         </motion.div>
 
         {loading ? (
-          <div className="flex justify-center items-center h-64">
-            <Loader2 className="animate-spin text-brandBlack" size={48} />
-          </div>
+          <Loader />
         ) : images.length === 0 ? (
           <div className="text-center py-20 bg-gray-50 rounded-2xl">
             <p className="text-gray-500">No images to display in the gallery yet.</p>

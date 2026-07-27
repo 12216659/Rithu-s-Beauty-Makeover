@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Trash2, UploadCloud, X, Loader2 } from 'lucide-react';
 import axios from 'axios';
+import Loader from '../../components/Loader';
 
 const ManageGallery = () => {
   const [images, setImages] = useState([]);
@@ -97,9 +98,7 @@ const ManageGallery = () => {
       </div>
 
       {fetching ? (
-        <div className="flex justify-center items-center h-64">
-          <Loader2 className="animate-spin text-brandBlack" size={48} />
-        </div>
+        <Loader />
       ) : images.length === 0 ? (
         <div className="text-center py-20 glass-card">
           <p className="text-gray-500">No images in gallery yet. Start by uploading one!</p>

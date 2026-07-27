@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Edit2, Trash2, Plus, Image as ImageIcon, X, UploadCloud, Loader2 } from 'lucide-react';
 import axios from 'axios';
+import Loader from '../../components/Loader';
 
 const ManageServices = () => {
   const [services, setServices] = useState([]);
@@ -112,9 +113,7 @@ const ManageServices = () => {
       </div>
 
       {fetching ? (
-        <div className="flex justify-center items-center h-64">
-          <Loader2 className="animate-spin text-brandBlack" size={48} />
-        </div>
+        <Loader />
       ) : services.length === 0 ? (
         <div className="text-center py-20 bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100">
           <p className="text-gray-500 font-medium">No services found. Add your first service!</p>

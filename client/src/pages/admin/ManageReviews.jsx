@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Trash2, Plus, Star, X, UploadCloud, Loader2 } from 'lucide-react';
 import axios from 'axios';
+import Loader from '../../components/Loader';
 
 const ManageReviews = () => {
   const [reviews, setReviews] = useState([]);
@@ -92,9 +93,7 @@ const ManageReviews = () => {
       </div>
 
       {fetching ? (
-        <div className="flex justify-center items-center h-64">
-          <Loader2 className="animate-spin text-brandBlack" size={48} />
-        </div>
+        <Loader />
       ) : reviews.length === 0 ? (
         <div className="text-center py-20 glass-card">
           <p className="text-gray-500">No reviews found. Add your first customer review!</p>

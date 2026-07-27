@@ -3,6 +3,7 @@ import axios from 'axios';
 import { motion } from 'framer-motion';
 import { User, Mail, Phone, Calendar, Clock, MapPin, CheckCircle, Clock3, Edit2, Save, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import Loader from '../components/Loader';
 
 const UserProfile = () => {
   const [user, setUser] = useState(null);
@@ -82,7 +83,7 @@ const UserProfile = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-brandBlack border-t-transparent rounded-full animate-spin"></div>
+        <Loader />
       </div>
     );
   }
